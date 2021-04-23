@@ -132,56 +132,65 @@ void sort_add(int data)
         return;
     }
 
-    else
+    else if (tail->data <= data)
     {
-        Node *temp = head;
-        if (tail->data <= data)
+        add_last(data);
+        return;
+    }
+
+    Node *temp = head;
+    for(int i = 0; i < N; i++)
+    {
+        if (data <= temp->data)
         {
-            add_last(data);
-            return;
-        }
-        for(int i = 0; i < N; i++)
-        {
-            if (data <= temp->data)
+            if (temp->prev == NULL)
             {
-                if (temp->prev == NULL)
-                {
-                    add_first(data);
-                    return;
-                }
-                else
-                {
-                    Node *new_node = construct_node(data);
-                    Node *left = temp->prev;
-                    left->next = new_node;
-                    new_node->prev = left;
-                    new_node->next = temp;
-                    temp->prev = new_node;
-                    N++;
-                    return;
-                }
+                add_first(data);
+                return;
             }
-            temp = temp->next;
+            else
+            {
+                Node *new_node = construct_node(data);
+                Node *left = temp->prev;
+                left->next = new_node;
+                new_node->prev = left;
+                new_node->next = temp;
+                temp->prev = new_node;
+                N++;
+                return;
+            }
         }
+        temp = temp->next;
     }
 }
 
 void remove_first()
 {
     Node *temp = head;
-    head = head->next;
-    head->prev = NULL;
-    free(temp);
+    if(N > 1)
+    {
+        head = head->next;
+        head->prev = NULL;
+        free(temp);
+    }
+    else
+    {
+        head = NULL;
+        free(temp);
+    }
     N--;
 }
 
 void show_list()
 {
-    Node *temp = head;
-    for(int i = 0; i < N - 1; i++)
+    if(N > 0)
     {
-        printf("%d, ", temp->data);
-        temp = temp->next;
+        Node *temp = head;
+        for(int i = 0; i < N - 1; i++)
+        {
+            printf("%d, ", temp->data);
+            temp = temp->next;
+        }
+        printf("%d\n", temp->data);
     }
-    printf("%d\n", temp->data);
 }
